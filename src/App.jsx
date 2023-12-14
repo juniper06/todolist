@@ -3,10 +3,6 @@ import {
   Button,
   TextField,
   Typography,
-  InputAdornment,
-  FormControl,
-  InputLabel,
-  Select,
   MenuItem,
   Card,
   CardHeader,
@@ -15,8 +11,6 @@ import {
   CardContent,
   CardActions,
   Collapse,
-  Tooltip,
-  Checkbox,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -25,13 +19,8 @@ import {
   DialogActions,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import SearchIcon from "@mui/icons-material/Search";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import axios from "axios";
 
 const App = () => {
@@ -103,15 +92,10 @@ export const AddTaskButton = ({getTasks}) => {
   const [openTask, setOpenTask] = useState(false);
   const [titleValue, setTitleValue] = useState("");
   const [descriptionValue, setDescriptionValue] = useState("");
-  const [statusValue, setStatusValue] = useState("");
   const [dueDateValue, setDueDateValue] = useState("");
 
   const handleOpenTask = () => setOpenTask(true);
   const handleCloseTask = () => setOpenTask(false);
-
-  const handleChange = (event) => {
-    setCategory(event.target.value);
-  };
 
   const AddTask = async () => {
     await axios
@@ -126,6 +110,8 @@ export const AddTaskButton = ({getTasks}) => {
         setDescriptionValue("");
         setDueDateValue("");
       });
+
+      getTasks();
   };
 
 
@@ -218,11 +204,9 @@ export const TaskContainer = ({ task, getTasks }) => {
   const [expanded, setExpanded] = React.useState(false);
   const [titleValue, setTitleValue] = useState("");
   const [descriptionValue, setDescriptionValue] = useState("");
-  const [statusValue, setStatusValue] = useState("");
   const [dueDateValue, setDueDateValue] = useState("");
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [confirmUpdateDialog, setConfirmUpdateDialog] = useState(false);
   const [openEditTask, setOpenEditTask] = useState(false);
 
   const handleOpenEditTask = () => setOpenEditTask(true);
@@ -262,7 +246,7 @@ export const TaskContainer = ({ task, getTasks }) => {
 
   const updateTask = async () => {
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/tasks/${task.id}`, {
+      await axios.put(`http://127.0.0.1:5000/tasks/${task.id}`, {
         title: titleValue,
         description: descriptionValue,
         status: "pending",
@@ -491,7 +475,7 @@ const SeeAllCategory = () => {
 
   const editCategory = async (id) => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `http://127.0.0.1:5000/categories/${id}`,
         {
           name: categoryValue,
